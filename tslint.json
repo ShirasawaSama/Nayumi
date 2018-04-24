@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-standard"
+  ],
+  "rules": {
+    "ordered-imports": false,
+    "no-var-requires": false,
+    "arrow-parens": false,
+    "no-console": [false],
+    "no-empty": false,
+    "object-literal-sort-keys": false,
+    "interface-name": false,
+    "forin": false,
+    "align": false,
+    "no-bitwise": false,
+    "only-arrow-functions": false
+  }
+}

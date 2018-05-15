@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Code</title>
+  <link rel="stylesheet" href="./font/fira_code.css">
+  <link rel="stylesheet" href="../node_modules/codemirror/addon/lint/lint.css">
+  <link rel="stylesheet" href="../node_modules/codemirror/lib/codemirror.css">
+  <link rel="stylesheet" href="../node_modules/codemirror/theme/dracula.css">
+  <style>
+  * { font-family: 'Fira Code', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+    'Helvetica Neue', 'Microsoft YaHei', sans-serif
+  }
+  body { background: #ccc }
+  html { width: 760px }
+  .CodeMirror {
+    margin: 30px;
+    padding: 15px 0 10px 10px;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 45px, rgba(0, 0, 0, 0.22) 0px 10px 18px;
+    width: 700px;
+    position: inherit;
+    height: auto;
+    max-width: 100%;
+  }
+  </style>
+</head>
+<body>
+  <script src="../node_modules/codemirror/lib/codemirror.js"></script>
+  <script src="../node_modules/codemirror/mode/javascript/javascript.js"></script>
+  <script src="../node_modules/codemirror/addon/lint/lint.js"></script>
+  <script>
+  (() => {
+    let errors = []
+    CodeMirror.registerHelper('lint', 'javascript', () => errors)
+    const code = CodeMirror(document.body, {
+      value: '',
+      theme: 'dracula',
+      tabSize: 2,
+      lineNumbers: true,
+      lineWrapping: true,
+      mode: 'text/typescript',
+      gutters: ['CodeMirror-lint-markers'],
+      lint: true
+    })
+    window.update = (c, err) => ((errors = err), code.setValue(c))
+  })()
+  </script>
+</body>
+</html>

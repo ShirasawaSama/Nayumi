@@ -1,4 +1,4 @@
-# Nayumi [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
+# Nayumi [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 一只可爱的 `Telegram` 机器人
 
@@ -12,14 +12,27 @@
 
 ## 构建
 
+### 安装
+
 ```bash
 npm install
+```
 
-set TOKEN=xxxx # 机器人 Token
+### 启动
 
-# set AGENT=http://127.0.0.1:8081 代理服务器, 如果有需要
-
+```bash
 npm start
+```
+
+### 配置项
+
+`config.json`
+
+```json
+{
+  "token": "xxxxxxxxx", // 机器人 Token
+  "agent": "http://127.0.0.1:8081" // 代理服务器, 可选
+}
 ```
 
 ## 作者

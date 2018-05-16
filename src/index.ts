@@ -5,6 +5,7 @@ import * as HttpsProxy from 'https-proxy-agent'
 import { readFile, writeFileSync } from 'fs'
 import { launch } from 'puppeteer'
 import { join } from 'path'
+import use from './use'
 import reply from './reply'
 import npmSearch from './npmSearch'
 
@@ -43,6 +44,36 @@ readFile(FILE, (err, file) => {
         })
       })
       .on('message', (ctx, next) => ((ctx.session.hasSent = false), next()))
+      .command('use', async ctx => {
+        let query: string = ctx.message.text
+        const i = query.indexOf(' ')
+        if (~i) {
+          const result = await use(query = query.slice(i + 1))
+          query = escape(query)
+          if (result) {
+            const { usage, homepage, repository } = result
+            if (usage.length) {
+              const text = usage.map((c, j) =>
+                '*代码片段' + (j + 1) + ':*\n```\n' + c + '\n```').join('\n\n')
+              await ctx.replyWithMarkdown(
+                `@${ctx.message.from.username}\n模块 [${query}](https://www.q` +
+                `npmjs.com/package/${query}) 总共找到以下使用方法(=゜ω゜)ノ\n\n${text}\n` +
+                (homepage ? ` [模块主页](${homepage})` : '') +
+                (repository ? ` [仓库](${repository})` : '')
+              )
+            } else {
+              await ctx.replyWithMarkdown(
+                `@${ctx.message.from.username}\n模块 [${query}](https://www.q` +
+                `npmjs.com/package/${query}) 没有找到使用方法(๑ŏ ﹏ ŏ๑)~\n\n` +
+                (homepage ? ` [模块主页](${homepage})` : '') +
+                (repository ? ` [仓库](${repository})` : '')
+              )
+            }
+          } else {
+            await ctx.replyWithMarkdown(`@${ctx.message.from.username}\n模块 ${query} 不存在(๑ŏ ﹏ ŏ๑)~`)
+          }
+        }
+      })
       .command('npm', async ctx => {
         let query: string = ctx.message.text
         const i = query.indexOf(' ')
@@ -50,7 +81,7 @@ readFile(FILE, (err, file) => {
           const queryString = query.slice(i + 1)
           query = encodeURIComponent(queryString.replace(/ /g, '+'))
           const { source, total, results } = await npmSearch(query, agent)
-          await ctx.replyWithPhoto({ source })
+          if (source) await ctx.replyWithPhoto({ source })
           const text = results.map(({ package: { name, version, description: d,
               links: { npm, repository: r } } }, j) => ((d = escape(d)),
             `${j}. [${name}](${npm})@[${escape(version)}](https://www.npmjs.com/package/${name}?activeTab=` +

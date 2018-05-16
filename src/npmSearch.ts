@@ -44,6 +44,7 @@ const dom = chart.getDom() as any
 export default (query: string, agent) => axios
   .get('https://api.npms.io/v2/search?size=10&q=' + query + '+not:deprecated', { httpsAgent: agent })
   .then(({ data: { results, total } }) => {
+    if (!results.length) return { results, total }
     chart.setOption({
       series: [
         {
